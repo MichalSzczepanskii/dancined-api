@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -13,11 +14,21 @@ class AuthController extends Controller
 
     public function login() {
         $credientials = request(['email', 'password']);
-        if (!$token = auth()->claims(['test' => 'test'])->attempt($credientials)) {
+        $ttl = $this->getTTL();
+
+        if(!auth()->validate($credientials)) return response()->json(['error' => 'Unauthorized'], 401);
+
+        $user = User::where('email', '=', $credientials['email'])->first();
+        $permissions = collect($user->getAllPermissions())->map(function ($permission) {
+            return $permission['name'];
+        });
+        $token = auth()->claims(['permissions' => $permissions])->login($user);
+
+        if (!$token) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return $this->respondWithToken($token);
+        return $this->respondWithToken($token, $ttl);
     }
 
     public function me() {
@@ -30,14 +41,21 @@ class AuthController extends Controller
     }
 
     public function refresh() {
-        return $this->respondWithToken(auth()->refresh());
+        return $this->respondWithToken(auth()->refresh(), $this->getTTL());
     }
 
-    protected function respondWithToken($token) {
+    protected function respondWithToken($token, $ttl) {
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL()*60
+            'expires_in' => $ttl
         ]);
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getTTL(): mixed {
+        return request('remember_me') ? env('JWT_REMEMBER_TTL') : env('JWT_TTL');
     }
 }
