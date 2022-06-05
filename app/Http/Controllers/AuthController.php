@@ -16,17 +16,7 @@ class AuthController extends Controller
         $credientials = request(['email', 'password']);
         $ttl = $this->getTTL();
 
-        if(!auth()->validate($credientials)) return response()->json(['error' => 'Unauthorized'], 401);
-
-        $user = User::where('email', '=', $credientials['email'])->first();
-        $permissions = collect($user->getAllPermissions())->map(function ($permission) {
-            return $permission['name'];
-        });
-        $token = auth()->claims(['permissions' => $permissions])->login($user);
-
-        if (!$token) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        if(!$token = auth()->attempt($credientials)) return response()->json(['error' => 'Unauthorized'], 401);
 
         return $this->respondWithToken($token, $ttl);
     }
@@ -48,7 +38,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => $ttl
+            'expires_in' => $ttl,
         ]);
     }
 

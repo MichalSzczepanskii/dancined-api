@@ -19,6 +19,9 @@ class PermisionSeeder extends Seeder
         Permission::create(['name' => 'users.read_one']);
         Permission::create(['name' => 'users.read_all']);
 
+        Permission::create(['name' => 'locations.read_one']);
+        Permission::create(['name' => 'locations.read_all']);
+
         $superAdmin = Role::findByName('super-admin');
         $superAdmin->givePermissionTo(Permission::all());
     }
