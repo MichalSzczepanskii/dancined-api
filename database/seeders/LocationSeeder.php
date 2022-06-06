@@ -15,22 +15,24 @@ class LocationSeeder extends Seeder
      */
     public function run()
     {
-        Location::create([
-            'name' => 'Kalisz',
-            'description' => '',
-            'address' => 'Kalisz',
-        ]);
+//        Location::create([
+//            'name' => 'Kalisz',
+//            'description' => '',
+//            'address' => 'Kalisz',
+//        ]);
+//
+//        Location::create([
+//            'name' => 'Jarocin',
+//            'description' => '',
+//            'address' => 'Jarocin',
+//        ]);
+//
+//        Location::create([
+//            'name' => 'Kalisz CKIS',
+//            'description' => '',
+//            'address' => 'Kalisz',
+//        ]);
 
-        Location::create([
-            'name' => 'Jarocin',
-            'description' => '',
-            'address' => 'Jarocin',
-        ]);
-
-        Location::create([
-            'name' => 'Kalisz CKIS',
-            'description' => '',
-            'address' => 'Kalisz',
-        ]);
+        Location::factory(50)->create();
     }
 }
