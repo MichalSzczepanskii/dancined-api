@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             PermisionSeeder::class,
             UserSeeder::class,
             LocationSeeder::class,
+            LessonTypeSeeder::class,
         ]);
     }
 }
