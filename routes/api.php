@@ -40,6 +40,17 @@ Route::middleware(['api'])->group(function() {
                     Route::get('', [LocationController::class, 'index'])
                         ->middleware('permission:locations.read_all')
                         ->name('index');
+
+                    Route::post('', [LocationController::class, 'store'])
+                        ->middleware('permission:locations.read_all');
+
+                    Route::delete('{id}', [LocationController::class, 'delete'])
+                        ->where('id', '[0-9]+')
+                        ->middleware('permission:locations.read_all');
+
+                    Route::put('{location}', [LocationController::class, 'update'])
+                        ->where('location', '[0-9]+')
+                        ->middleware('permission:locations.read_all');
                 });
 
         });
