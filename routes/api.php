@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LessonTypeController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\RoomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -71,6 +72,25 @@ Route::middleware(['api'])->group(function() {
                     Route::put('{lesson_type}', [LessonTypeController::class, 'update'])
                         ->where('lesson_type', '[0-9]+')
                         ->middleware('permission:lesson_types.read_all');
+                });
+
+            Route::prefix('rooms')
+                ->name('rooms.')
+                ->group(function() {
+                    Route::get('', [RoomController::class, 'index'])
+                        ->middleware('permission:rooms.read_all')
+                        ->name('index');
+
+                    Route::post('', [RoomController::class, 'store'])
+                        ->middleware('permission:rooms.read_all');
+
+                    Route::delete('{id}', [RoomController::class, 'delete'])
+                        ->where('id', '[0-9]+')
+                        ->middleware('permission:rooms.read_all');
+
+                    Route::put('{room}', [RoomController::class, 'update'])
+                        ->where('room', '[0-9]+')
+                        ->middleware('permission:rooms.read_all');
                 });
 
         });
