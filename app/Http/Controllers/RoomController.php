@@ -7,20 +7,23 @@ use App\Http\Resources\RoomResource;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedSort;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class RoomController extends Controller
 {
 
     public function index() {
-        $query = Room::query();
-
-        if(\request('sort_by'))
-            $query->orderBy(\request('sort_by'), \request('sort_order', 'asc'));
-
-        $filters = json_decode(\request('filter'));
-        foreach ($filters as $filter){
-                $query->where($filter->field, 'LIKE', '%'.$filter->value.'%');
-        }
+        $columns = ['rooms.id','rooms.name', 'rooms.description', 'locations.name'];
+        $filters = $columns;
+        $filters[] = AllowedFilter::exact('locations.id', null, false);
+        $query = QueryBuilder::for(Room::class)
+            ->select('rooms.*')
+            ->join('locations', 'locations.id', 'rooms.location_id')
+            ->allowedSorts($columns)
+            ->allowedFilters($filters)
+            ->defaultSort('rooms.id');
 
         return RoomResource::collection(
             $query->paginate(request()->per_page ?? 15)

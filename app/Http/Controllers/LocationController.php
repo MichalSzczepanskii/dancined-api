@@ -6,21 +6,18 @@ use App\Http\Requests\Location\LocationRequest;
 use App\Http\Resources\LocationResource;
 use App\Models\Location;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 use function PHPUnit\Framework\isNull;
 
 class LocationController extends Controller
 {
 
     public function index() {
-        $query = Location::query();
-
-        if(\request('sort_by'))
-            $query->orderBy(\request('sort_by'), \request('sort_order', 'asc'));
-
-        $filters = json_decode(\request('filter'));
-        foreach ($filters as $filter)
-            $query->where($filter->field, 'LIKE', '%'.$filter->value.'%');
-
+        $columns = ['id', 'name', 'description', 'address'];
+        $query = QueryBuilder::for(Location::class)
+            ->defaultSort('id')
+            ->allowedSorts($columns)
+            ->allowedFilters($columns);
 
         return LocationResource::collection(
             $query->paginate(request()->per_page ?? 15)
@@ -42,5 +39,11 @@ class LocationController extends Controller
     public function update(Location $location, LocationRequest $request) {
         $location->update($request->validated());
         return response()->json();
+    }
+
+    public function getAllRaw() {
+        return LocationResource::collection(
+            Location::all()
+        );
     }
 }

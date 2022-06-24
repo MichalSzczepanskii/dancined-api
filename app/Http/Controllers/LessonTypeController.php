@@ -6,19 +6,17 @@ use App\Http\Requests\LessonType\LessonTypeRequest;
 use App\Http\Resources\LessonTypeResource;
 use App\Models\LessonType;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class LessonTypeController extends Controller
 {
 
     public function index() {
-        $query = LessonType::query();
-
-        if(\request('sort_by'))
-            $query->orderBy(\request('sort_by'), \request('sort_order', 'asc'));
-
-        $filters = json_decode(\request('filter'));
-        foreach ($filters as $filter)
-            $query->where($filter->field, 'LIKE', '%'.$filter->value.'%');
+        $columns = ['id', 'name', 'description'];
+        $query = QueryBuilder::for(LessonType::class)
+            ->defaultSort('id')
+            ->allowedSorts($columns)
+            ->allowedFilters($columns);
 
         return LessonTypeResource::collection(
             $query->paginate(request()->per_page ?? 15)
