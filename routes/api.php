@@ -53,6 +53,9 @@ Route::middleware(['api'])->group(function() {
                     Route::put('{location}', [LocationController::class, 'update'])
                         ->where('location', '[0-9]+')
                         ->middleware('permission:locations.read_all');
+
+                    Route::get('getAllRaw', [LocationController::class, 'getAllRaw'])
+                        ->middleware('permission:locations.read_all');
                 });
 
             Route::prefix('lesson_types')
