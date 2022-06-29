@@ -22,8 +22,8 @@ class PermisionSeeder extends Seeder
         Permission::create(['name' => 'locations.read_one']);
         Permission::create(['name' => 'locations.read_all']);
 
-        Permission::create(['name' => 'lesson_types.read_one']);
-        Permission::create(['name' => 'lesson_types.read_all']);
+        Permission::create(['name' => 'lesson-types.read_one']);
+        Permission::create(['name' => 'lesson-types.read_all']);
 
         Permission::create(['name' => 'rooms.read_one']);
         Permission::create(['name' => 'rooms.read_all']);

@@ -62,19 +62,19 @@ Route::middleware(['api'])->group(function() {
                 ->name('lesson_types.')
                 ->group(function() {
                     Route::get('', [LessonTypeController::class, 'index'])
-                        ->middleware('permission:lesson_types.read_all')
+                        ->middleware('permission:lesson-types.read_all')
                         ->name('index');
 
                     Route::post('', [LessonTypeController::class, 'store'])
-                        ->middleware('permission:lesson_types.read_all');
+                        ->middleware('permission:lesson-types.read_all');
 
                     Route::delete('{id}', [LessonTypeController::class, 'delete'])
                         ->where('id', '[0-9]+')
-                        ->middleware('permission:lesson_types.read_all');
+                        ->middleware('permission:lesson-types.read_all');
 
                     Route::put('{lesson_type}', [LessonTypeController::class, 'update'])
                         ->where('lesson_type', '[0-9]+')
-                        ->middleware('permission:lesson_types.read_all');
+                        ->middleware('permission:lesson-types.read_all');
                 });
 
             Route::prefix('rooms')
