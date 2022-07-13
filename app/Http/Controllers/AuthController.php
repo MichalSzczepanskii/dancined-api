@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ParticipantResource;
 use App\Http\Resources\UserResource;
+use App\Interfaces\ParticipantRepository;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
 
-    public function __construct() {
+    private ParticipantRepository $participantRepository;
+
+    public function __construct(ParticipantRepository $participantRepository) {
+        $this->participantRepository = $participantRepository;
         $this->middleware('auth:api', ['except' => ['login']]);
     }
 
@@ -48,5 +53,13 @@ class AuthController extends Controller
      */
     private function getTTL(): mixed {
         return request('remember_me') ? env('JWT_REMEMBER_TTL') : env('JWT_TTL');
+    }
+
+    public function getAllParticipants() {
+        return ParticipantResource::collection(
+            $this->participantRepository->getAllByPayerId(auth()->user()->id)->filter(function($participant) {
+                return $participant->person->id !== auth()->user()->person->id;
+            })
+        );
     }
 }

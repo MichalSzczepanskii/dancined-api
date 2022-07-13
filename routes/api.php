@@ -31,6 +31,7 @@ Route::middleware(['api'])->group(function() {
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
         Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
         Route::get('me', [AuthController::class, 'me'])->name('me');
+        Route::get('all-participants', [AuthController::class, 'getAllParticipants'])->name('all-participants');
     });
 
     Route::middleware('auth')

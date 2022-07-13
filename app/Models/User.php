@@ -54,7 +54,7 @@ class User extends Authenticatable implements JWTSubject
         });
         return [
             'permissions' => $permissions,
-            'first_name' => $this->person->first_name,
+            'name' => $this->person->first_name . ' ' . $this->person->last_name,
         ];
     }
 
