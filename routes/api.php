@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\LessonTypeController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\RoomController;
@@ -95,6 +96,14 @@ Route::middleware(['api'])->group(function() {
                     Route::put('{room}', [RoomController::class, 'update'])
                         ->where('room', '[0-9]+')
                         ->middleware('permission:rooms.read_all');
+                });
+
+            Route::prefix('clients')
+                ->name('clients.')
+                ->group(function() {
+                    Route::get('', [ClientController::class, 'index'])
+                        ->middleware('permission:clients.read_all')
+                        ->name('index');
                 });
 
         });

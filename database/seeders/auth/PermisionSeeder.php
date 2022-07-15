@@ -50,6 +50,13 @@ class PermisionSeeder extends Seeder
         Permission::create(['name' => 'rooms.update']);
         Permission::create(['name' => 'rooms.delete']);
 
+        //Clients permissions
+        Permission::create(['name' => 'clients.read_one']);
+        Permission::create(['name' => 'clients.read_all']);
+        Permission::create(['name' => 'clients.create']);
+        Permission::create(['name' => 'clients.update']);
+        Permission::create(['name' => 'clients.delete']);
+
         $superAdmin = Role::findByName('super-admin');
         $superAdmin->givePermissionTo(Permission::all());
     }
