@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Interfaces\ClientRepository;
 use App\Interfaces\ParticipantRepository;
+use App\Repositories\EloquentClientRepository;
 use App\Repositories\EloquentParticipantRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -18,6 +20,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             ParticipantRepository::class,
             EloquentParticipantRepository::class
+        );
+        $this->app->bind(
+            ClientRepository::class,
+            EloquentClientRepository::class
         );
     }
 
